@@ -36,7 +36,7 @@ A command-line AI assistant that uses an OpenAI-compatible chat completions API.
    MODEL=your-model-name
    WEATHER_BASE_URL=https://wttr.in
    MAX_TOOL_CALL_REQUESTS=10
-   DEBUG=False
+   AI_ASSISTANT_DEBUG=False
    ```
 
    The app adds `/v1` to `BASE_URL`. Keep your API key private and do not commit `.env`.
@@ -47,7 +47,7 @@ A command-line AI assistant that uses an OpenAI-compatible chat completions API.
 python ai_assistant.py
 ```
 
-Enter a message at the `Samman:` prompt. Type `exit` to quit. Set `DEBUG=True` in `.env` to display tool-call logs.
+Enter a message at the `Samman:` prompt. Type `exit` to quit. Set `AI_ASSISTANT_DEBUG=True` in `.env` to display tool-call logs.
 
 ## Project files
 
@@ -64,4 +64,4 @@ Enter a message at the `Samman:` prompt. Type `exit` to quit. Set `DEBUG=True` i
 | `MODEL` | Model name supported by the configured API |
 | `WEATHER_BASE_URL` | Weather service base URL, such as `https://wttr.in` |
 | `MAX_TOOL_CALL_REQUESTS` | Maximum tool-call rounds for each user message; defaults to `10` |
-| `DEBUG` | Set to `True` to show tool execution logs |
+| `AI_ASSISTANT_DEBUG` | Set to `True` to show tool execution logs |
