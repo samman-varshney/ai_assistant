@@ -54,20 +54,21 @@ def construct_response(stream, tools):
 
             elif event.choices[0].delta.tool_calls:
 
-                message += str(event)
+                
                 tool_calls = event.choices[0].delta.tool_calls
-                index = tool_calls[0].index
+                message += str(tool_calls)
+                for tool_call in tool_calls:
+                    index = tool_call.index
+                    if index not in tools:
 
-                if index not in tools:
+                        tools[index] = {
+                            "id":tool_calls[0].id,
+                            "name":tool_calls[0].function.name,
+                            "arguments":tool_calls[0].function.arguments
+                        }
 
-                    tools[index] = {
-                        "id":tool_calls[0].id,
-                        "name":tool_calls[0].function.name,
-                        "arguments":tool_calls[0].function.arguments
-                    }
-
-                else:
-                    tools[index]["arguments"] += tool_calls[0].function.arguments
+                    else:
+                        tools[index]["arguments"] += tool_calls[0].function.arguments
         return message
     except Exception as e:
         return F"Error while parsing LLM response - {str(e)}"
