@@ -1,37 +1,10 @@
-
-import json
 import os
-from tools import TOOLS_MAPPING
+from google.auth.transport.requests import Request
+from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import InstalledAppFlow
+from googleapiclient.discovery import build
 
-
-def get_tool_response(tools_dict, messages_history):
-    for index in tools_dict:
-        try:
-            tool_name = tools_dict[index]['name']
-            tool_args = json.loads(tools_dict[index]['arguments'])
-            tool_call_id = tools_dict[index]['id']
-
-            log(f"  🛠️ {tool_name}({tool_args})")
-            if(tool_name not in TOOLS_MAPPING):
-                raise ValueError(f"Tool '{tool_name}' is not defined in TOOLS_MAPPING.")
-            
-            tool_info = TOOLS_MAPPING.get(tool_name)
-            func = tool_info["function"]
-            validator = tool_info["validator"]
-
-            validated_args = validator(**tool_args)
-
-            response = func(**validated_args.dict())
-        except Exception as e:
-            response = f"Error executing tool '{tool_name}': {str(e)}"
-
-        log(f"  💬 response: {response}")
-
-        messages_history.append({
-            "role": "tool",
-            "content": response,
-            "tool_call_id": tool_call_id
-        })
+SCOPES = list(str(os.getenv("GMAIL_SCOPES")).strip().split(","))
 
 def log(text):
     if os.getenv("AI_ASSISTANT_DEBUG", "").strip().lower() in {"true", "1", "yes", "on"}:
@@ -73,3 +46,27 @@ def construct_response(stream, tools):
     except Exception as e:
         return F"Error while parsing LLM response - {str(e)}"
     
+    
+def get_gmail_service_client():
+    creds = None
+    # The file token.json stores the user's access and refresh tokens, and is
+    # created automatically when the authorization flow completes for the first
+    # time.
+    if os.path.exists("token.json"):
+        creds = Credentials.from_authorized_user_file("token.json", SCOPES)
+    # If there are no (valid) credentials available, let the user log in.
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file(
+                "credentials.json", SCOPES
+            )
+            creds = flow.run_local_server(port=0)
+        # Save the credentials for the next run
+        with open("token.json", "w") as token:
+            token.write(creds.to_json())
+
+    return build("gmail", "v1", credentials=creds)
+ 
+        

@@ -2,8 +2,9 @@ from openai import OpenAI
 from dotenv import load_dotenv
 import os
 import sys
-from tools import TOOLS
-from utils import get_tool_response, log, construct_response
+from tools import TOOLS, get_tool_response
+from utils import log, construct_response
+
 
 load_dotenv()
 
@@ -26,7 +27,7 @@ messages_history.append({
     "content": (
         "You are a helpful assistant."
         "Don't execeed the {max_tool_call_requests} subsequent tool calls limit. "
-        "Keep responses under 100 words."
+        "Keep responses short and concise"
     ),
 })
 
