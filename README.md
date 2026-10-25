@@ -52,8 +52,10 @@ Enter a message at the `Samman:` prompt. Type `exit` to quit. Set `AI_ASSISTANT_
 ## Project files
 
 - `ai_assistant.py` — command-line conversation loop and API client
-- `tools.py` — current-time and city-weather tools
-- `utils.py` — tool-call execution and optional logging
+- `tools.py` — combined tool registry and tool-call dispatcher
+- `tool_modules/general.py` — current-time and city-weather tools
+- `tool_modules/gmail.py` — Gmail read, draft, and send tools
+- `utils.py` — Gmail authentication, response parsing, and optional logging
 
 ## Configuration
 

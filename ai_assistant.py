@@ -86,7 +86,7 @@ while True:
         print("\033[31mAgent loop stopped due to user interruption!\033[0m")
         break
     except Exception as e:
-        print("\033[31mError occured while running agent loop: {e}\033[0m")
+        print(F"\033[31mError occured while running agent loop: {e}\033[0m")
         break
     
 

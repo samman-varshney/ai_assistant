@@ -1,3 +1,4 @@
+import base64
 import os
 from typing import Any, Iterable
 from types import SimpleNamespace
@@ -115,3 +116,14 @@ def construct_tool_calls_payload(tool_calls: list[Any]) -> list[dict[str, Any]]:
         })
 
     return payload
+
+def find_plain_text(part):
+    mime_type = part.get("mimeType", "")
+    data = part.get("body", {}).get("data")
+    if mime_type == "text/plain" and data:
+        return base64.urlsafe_b64decode(data + "==").decode("utf-8", errors="replace")
+    for child in part.get("parts", []):
+        text = find_plain_text(child)
+        if text:
+            return text
+    return None
