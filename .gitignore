@@ -4,7 +4,4 @@ __pycache__
 .mypy_cache
 token.json
 credentials.json
-getmessage.py
 quickstart.py
-listmessages.py
-sendmessage.py

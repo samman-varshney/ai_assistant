@@ -40,8 +40,9 @@ class GetMessagesListRequest(BaseModel):
 
 def get_messages_list(q="", labelIds: list[Label] = [Label.INBOX], maxResults: int = 10) -> list[dict[str, str]]:
     service = get_gmail_service_client()
+    label_ids = [label.value if isinstance(label, Label) else label for label in labelIds]
     results = service.users().messages().list(
-        userId="me", labelIds=labelIds, maxResults=maxResults, q=q
+        userId="me", labelIds=label_ids, maxResults=maxResults, q=q
     ).execute()
     result = []
     for message in results.get("messages", []):
@@ -56,7 +57,7 @@ class GetMessageRequest(BaseModel):
 
 def get_message(id):
     service = get_gmail_service_client()
-    result = service.user().messages().get(userId="me", id=id, format="full").execute()
+    result = service.users().messages().get(userId="me", id=id, format="full").execute()
     return find_plain_text(result.get("payload", {})) or result.get("snippet", "")
 
 
