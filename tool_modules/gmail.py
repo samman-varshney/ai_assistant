@@ -2,11 +2,8 @@ import base64
 from email.message import EmailMessage
 from enum import Enum
 import os
-
 from pydantic import BaseModel, Field
-
 from utils import find_plain_text, get_gmail_service_client
-
 
 class Label(Enum):
     INBOX = "INBOX"
